@@ -1,22 +1,24 @@
 class Solution {
     public int numDistinct(String s, String t) {
-        Integer dp[][] = new Integer[s.length()][t.length()];
-       return helper(0,s,t,0,dp);
-    }
-    int helper(int i,String s, String t,int j,Integer dp[][]){
-        if(j == t.length()) return 1;
-        if(i > s.length() - 1) return 0;
-
-        if(dp[i][j] != null) return dp[i][j];
-        
-        int c = 0;
-        //dont take
-        c+= helper(i + 1,s,t,j,dp);
-
-        //take
-        if(s.charAt(i) == t.charAt(j))
-        c += helper(i + 1,s,t,j + 1,dp);
-
-        return  dp[i][j] = c;
+        int m = s.length(), n = t.length();
+        if (m < n) {
+            return 0;
+        }
+        int[][] dp = new int[m + 1][n + 1];
+        for (int i = 0; i <= m; i++) {
+            dp[i][n] = 1;
+        }
+        for (int i = m - 1; i >= 0; i--) {
+            char sChar = s.charAt(i);
+            for (int j = n - 1; j >= 0; j--) {
+                char tChar = t.charAt(j);
+                if (sChar == tChar) {
+                    dp[i][j] = dp[i + 1][j + 1] + dp[i + 1][j];
+                } else {
+                    dp[i][j] = dp[i + 1][j];
+                }
+            }
+        }
+        return dp[0][0];
     }
 }
